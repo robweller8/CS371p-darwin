@@ -1,37 +1,21 @@
 
-
-
-
-class  World{
-   private int r;
-   private int c;
-   World(r,c){
-      std::vector< std::vector<Creature> >(r, std::vector<Creature>(c, NULL));
-   }
-   // define index operator
-
-  
-   
-}
-class Creature{
-   int direction;
-   int programCounter;
-   private std::vector<Instruction>;
-}
+#include <vector> // vector
+#include <string>
+using namespace std;
 
 
 class Instruction{
-   private std::string instructionType;
-   private int n;
-   Instruction (std::string name){
+      std::string instructionType;
+      int n;
+   public:
+   Instruction (char* name, int x){
      instructionType = name;
-     n = 0;
+     n = x;
    }
-   Intruction (std::string name, int x){
-      instructionType = name;
-      n = x;
-   }
-   void execute(){
+   
+
+/*
+   void execute(char* ){
       switch (instructionType){
          case hop{
          }
@@ -54,8 +38,45 @@ class Instruction{
       }
 
    }
+*/
+};
 
-}
+class Species{
+   std::string type;
+   std::vector<Instruction> program;
 
-class god{
-}
+      Species(std::string name) {
+         type = name;
+      }
+   void addInstruction (char* name, int n){
+      Instruction instruction = Instruction(name, n);
+      program.push_back(instruction);
+   }
+   
+   
+};
+class Creature{
+   int direction;
+   int programCounter;
+   int row;
+   int column;
+   Creature(std::string name, Species* species){
+     Species type = *species;
+   }
+};
+class  World{
+   int turn;
+   int rows;
+   int columns;
+   std::vector< std::vector<Creature*> > _m;
+   World(int r, int c) {
+     _m = vector< std::vector<Creature*> >(r, std::vector<Creature*>(c));
+   }
+
+   // define index operator
+
+  
+   
+};
+
+
