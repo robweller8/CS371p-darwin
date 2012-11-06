@@ -59,6 +59,38 @@ struct TestDarwin : CppUnit::TestFixture {
            World w(2, 2);
 	   w.printWorld();
 	}
+
+        // --------
+	// testIsEmpty1
+	void testIsEmpty1 () {
+           World w(2, 2);
+	   w.printWorld();
+           Species newSpecies = Species("hopper");
+           Creature c = Creature("hopper1", &newSpecies, 1, 0, "north", &w);
+           w.addCreature(&c);
+           w.printWorld();
+           bool result = w.isEmpty(1,0);
+           CPPUNIT_ASSERT(!result);
+	}
+        // --------
+	// testIsEmpty2
+	void testIsEmpty2 () {
+           World w(2, 2);
+	   w.printWorld();
+           Species newSpecies = Species("hopper");
+           Creature c = Creature("hopper1", &newSpecies, 1, 0, "north", &w);
+           w.addCreature(&c);
+           bool result = w.isEmpty(0,0);
+           CPPUNIT_ASSERT(result);
+	}
+        // --------
+	// testIsEmpty3
+	void testIsEmpty3 () {
+           World w(2, 2);
+	   for (int i = 0; i< 2; i++)
+              for (int j = 0; j < 2; j++)
+                 CPPUNIT_ASSERT(w.isEmpty(i,j));
+	}
 	
 
 	
@@ -67,6 +99,9 @@ struct TestDarwin : CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(TestDarwin);
 	CPPUNIT_TEST(testSpecies1);
 	CPPUNIT_TEST(testWorld1);
+	CPPUNIT_TEST(testIsEmpty1);
+	CPPUNIT_TEST(testIsEmpty2);
+	CPPUNIT_TEST(testIsEmpty3);
 
 	
 	CPPUNIT_TEST_SUITE_END();

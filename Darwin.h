@@ -10,32 +10,32 @@ class Instruction{
       int instructionType;
       int n;
  
-     Instruction (char* name, int x){
-       if(strcmp(name,"hop") == 0){
+     Instruction (std::string name, int x){
+       if(strcmp(name.c_str(),"hop") == 0){
           instructionType = 0;
           n = -1;}
-       else if (strcmp(name,"left") == 0){
+       else if (strcmp(name.c_str(),"left") == 0){
           instructionType = 1;
           n = -1;}
-       else if (strcmp(name,"right") == 0){
+       else if (strcmp(name.c_str(),"right") == 0){
           instructionType = 2;
           n = -1;}
-       else if (strcmp(name,"infect") == 0){
+       else if (strcmp(name.c_str(),"infect") == 0){
           instructionType = 3;
           n = -1;}
-       else if (strcmp(name,"if_empty") == 0){
+       else if (strcmp(name.c_str(),"if_empty") == 0){
           instructionType = 4;
           n = x;}
-       else if (strcmp(name,"if_wall") == 0){
+       else if (strcmp(name.c_str(),"if_wall") == 0){
           instructionType = 5;
           n = x;}
-       else if (strcmp(name,"if_random") == 0){
+       else if (strcmp(name.c_str(),"if_random") == 0){
           instructionType = 6;
           n = x;}
-       else if (strcmp(name,"if_enemy") == 0){
+       else if (strcmp(name.c_str(),"if_enemy") == 0){
           instructionType = 7;
           n = x;}
-       else if (strcmp(name,"go") == 0){
+       else if (strcmp(name.c_str(),"go") == 0){
           instructionType = 8;
           n = x;}
      }
@@ -43,22 +43,22 @@ class Instruction{
 
 class Species{
    public:
-      std::string name;
+      char speciesType;
       std::vector<Instruction> program;
       Species() {}
-      Species(char* name) {
-         if(strcmp(name,"hopper") == 0)
-            name = "h";
-         else if (strcmp(name,"rover") == 0)
-            name = "r";
-         else if (strcmp(name,"food") == 0)
-            name = "f";
-         else if (strcmp(name,"trap") == 0)
-            name = "t";
-         else if (strcmp(name,"best") == 0)
-            name = "b";
+      Species(std::string name) {
+         if(strcmp(name.c_str(),"hopper") == 0)
+            speciesType = 'h';
+         else if (strcmp(name.c_str(),"rover") == 0)
+            speciesType = 'r';
+         else if (strcmp(name.c_str(),"food") == 0)
+            speciesType = 'f';
+         else if (strcmp(name.c_str(),"trap") == 0)
+            speciesType = 't';
+         else if (strcmp(name.c_str(),"best") == 0)
+            speciesType = 'b';
       }
-      void addInstruction (char* name, int n){
+      void addInstruction (std::string name, int n){
          Instruction instruction = Instruction(name, n);
          program.push_back(instruction);
       }  
@@ -70,25 +70,29 @@ class Creature{
       int creatureTurn;
       Species type;
       World* belongsTo;
-   private:
+      std::string name;
       int direction;
+   private:
+      
       int programCounter;
       int row;
       int column;
-      std::string name;
+      
      
    public:
-      Creature(std::string n, Species* species,int row,int column,char* facing, World* world){
+      Creature(std::string n, Species* species,int r,int c,std::string facing, World* world){
          belongsTo = world;
          type = *species;
+         row = r;
+         column = c;
          name = n;
-         if(strcmp(facing,"north") == 0)
+         if(strcmp(facing.c_str(),"north") == 0)
             direction = 0;
-         else if (strcmp(facing,"east") == 0)
+         else if (strcmp(facing.c_str(),"east") == 0)
             direction = 1;
-         else if (strcmp(facing,"south") == 0)
+         else if (strcmp(facing.c_str(),"south") == 0)
             direction = 2;
-         else if (strcmp(facing,"west") == 0)
+         else if (strcmp(facing.c_str(),"west") == 0)
             direction = 3;
       }
       void execute(Instruction* instructionToExecute);
@@ -105,25 +109,33 @@ class  World{
    public:
       World(){}
       World(int r, int c) {
-        _w = vector< std::vector<Creature*> >(r, std::vector<Creature*>(c));
+        _w = std::vector< std::vector<Creature*> >(r, std::vector<Creature*>(c));
         rows = r;
         columns = c;
         for (int i = 0; i < r; i++){
             for (int j = 0; j < c; j++){
-               _w[i][j] = 0;
+               _w[i][j] = NULL;
                 
             }  
          }
       }
-      void addCreature(std::string name, Species* species, int row, int column, char* direction){
-         Creature newCreature = Creature(name, species, row, column, direction, this);
-         _w[row][column] = &newCreature;
+
+      void addCreature(Creature* newCreature){
+      _w[newCreature->row][newCreature->column] = newCreature;
       }
 
+/*      void addCreature(std::string name, Species* species, int row, int column, std::string direction){
+         Creature newCreature = Creature(name, species, row, column, direction, this);
+        cout << &newCreature << endl;
+	Creature* c = &newCreature;
+        cout << c << endl;
+         _w[row][column] = c;
+      }
+*/
       bool isEmpty(int row, int column){
 	if(row < 0 || column < 0 || row >= rows || column >= columns)
           return false;
-        else if(_w[row][column] != 0)
+        else if(_w[row][column] != NULL)
           return false;
 	return true;
       }
@@ -135,11 +147,11 @@ class  World{
          cout << "------------------" << endl;
          for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
-               if (_w[i][j] == 0){
-                  cout << " 0 ";
+               if (_w[i][j] == NULL){
+                  cout << ".";
                }
                else{
-                  cout << (*(_w[i][j])).type.name;
+                  cout << _w[i][j]->type.speciesType;
                } 
             } 
             cout << endl; 
@@ -148,7 +160,7 @@ class  World{
       }
       void updateLocation(int row, int col, int newrow, int newcol, Creature* creature){
 	_w[newrow][newcol] = creature;
-        _w[row][col] = 0;
+        _w[row][col] = NULL;
       }
       void run(int turns);
 };
