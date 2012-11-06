@@ -11,6 +11,7 @@ class Instruction{
       int n;
  
      Instruction (std::string name, int x){
+       n = x;
        if(strcmp(name.c_str(),"hop") == 0){
           instructionType = 0;
           n = -1;}
@@ -37,7 +38,7 @@ class Instruction{
           n = x;}
        else if (strcmp(name.c_str(),"go") == 0){
           instructionType = 8;
-          n = x;}
+         }
      }
 };
 
@@ -85,6 +86,7 @@ class Creature{
          column = c;
          name = n;
          creatureTurn = 0;
+         programCounter = 0;
          if(strcmp(facing.c_str(),"north") == 0)
             direction = 0;
          else if (strcmp(facing.c_str(),"east") == 0)
@@ -94,7 +96,7 @@ class Creature{
          else if (strcmp(facing.c_str(),"west") == 0)
             direction = 3;
       }
-      void execute(Instruction* instructionToExecute);
+      void execute();
 };
 
 
@@ -138,14 +140,14 @@ class  World{
           return false;
       }
       bool isEnemy(int row, int column, Creature* checker){
-	if(row < 0 || column < 0 || row >= rows || column >= columns)
-          return false;
-        else if(_w[row][column] != NULL)
-          return false;
-	else if(checker->type.speciesType != _w[row][column]->type.speciesType)
-          return false;
-        else
-           return true;
+	if(row < 0 || column < 0 || row >= rows || column >= columns){
+          return false;}
+        if(_w[row][column] == NULL){
+          return false;}
+	if(checker->type.speciesType != _w[row][column]->type.speciesType){
+          return false;}
+        else{
+           return true;}
       }
       void infect(int row, int column, Creature* infector){
       _w[row][column]->type = infector->type;
@@ -177,11 +179,10 @@ class  World{
       void run(int turns);
 };
 
-void Creature::execute(Instruction* instructionToExecute){
-   int x = instructionToExecute->n;
-   switch ((*instructionToExecute).instructionType){
+void Creature::execute(){
+   int x = type.program[programCounter].n;
+   switch (type.program[programCounter].instructionType){
       case 0:{
-         ++creatureTurn;
          if(direction == 0 && belongsTo->isEmpty(row-1,column)){
             belongsTo->updateLocation(row, column, row - 1, column, this);
             --row;
@@ -202,28 +203,29 @@ void Creature::execute(Instruction* instructionToExecute){
             --column;
             ++programCounter;
          } 
+         ++creatureTurn;
          break;   
       }
       case 1:{
-         ++creatureTurn;
          if(direction == 0)
             direction = 3;
          else
             --direction;
          ++programCounter;
+         ++creatureTurn;
          break;
       }
       case 2:{
-         ++creatureTurn;
          if(direction == 3)
             direction = 0;
          else
             ++direction;
          ++programCounter;
+         ++creatureTurn;
          break;
       }
       case 3:{
-         ++creatureTurn;
+         
          if(direction == 0){
             if(belongsTo->isEnemy(row-1,column,this)){
                belongsTo->infect(row-1,column,this);
@@ -248,6 +250,7 @@ void Creature::execute(Instruction* instructionToExecute){
                ++programCounter;
               }
          }
+         ++creatureTurn;
          break;
       }
       case 4:{
@@ -327,10 +330,10 @@ void Creature::execute(Instruction* instructionToExecute){
                ++programCounter;
          } 
          if(direction == 2){
-            if(belongsTo->isEnemy(row+1,column,this))
-               programCounter= x;
-            else
-               ++programCounter;
+            if(belongsTo->isEnemy(row+1,column,this)){
+               programCounter= x;}
+            else{
+               ++programCounter;}
          } 
          if(direction == 3){
             if(belongsTo->isEnemy(row,column-1,this))
@@ -349,12 +352,23 @@ void Creature::execute(Instruction* instructionToExecute){
 }
 void World::run(int turns){
    printWorld();
+//cout << "before loop"<< endl;
    for(int i = 0; i< turns; i++){
       for (int k = 0; k < rows; k++){
+//cout << " k" << endl;
          for (int j = 0; j < columns; j++){
+//cout << "j" << endl;
             if(_w[k][j] != NULL){
-               while(_w[k][j]->creatureTurn <= worldTurn)
-                  _w[k][j]->execute(&(_w[k][j]->type.program[_w[k][j]->programCounter]));}    
+//cout << "inside if " << endl;
+               while(_w[k][j] != NULL && _w[k][j]->creatureTurn == worldTurn){
+//cout << "inside while" << endl;
+                  _w[k][j]->execute();
+//cout << "end of while" << endl;               
+               }
+
+
+
+            }    
          }  
       }
       ++worldTurn;
