@@ -6,7 +6,7 @@
 
 /*
 To run the program:
-% g++ -pedantic -std=c++0x -Wall RunCollatz.c++ -o RunCollatz.c++.app
+% g++ -pedantic -std=c++0x -Wall RunDarwin.c++ -o RunDarwin.c++.app
 % valgrind RunDarwin.c++.app > RunDarwin.out
 
 To configure Doxygen:
@@ -30,7 +30,7 @@ doxygen Doxyfile
 #include <cstdlib> // rand, srand
 #include <iostream> // cout, endl
 #include <stdexcept> // invalid_argument, out_of_range
-
+#include "Darwin.h"
 // ----
 // main
 // ----
@@ -78,17 +78,17 @@ int main () {
    9: infect
    10: go 0
    */
-   rover.addInstruction("if_enemy",9)
-   rover.addInstruction("if_empty",7)
-   rover.addInstruction("if_random",5)
-   rover.addInstruction("left",-1)
-   rover.addInstruction("go",0)
-   rover.addInstruction("right",-1)
-   rover.addInstruction("go",0)
-   rover.addInstruction("hop",-1)
-   rover.addInstruction("go",0)
-   rover.addInstruction("infect",-1)
-   rover.addInstruction("go",0)
+   rover.addInstruction("if_enemy",9);
+   rover.addInstruction("if_empty",7);
+   rover.addInstruction("if_random",5);
+   rover.addInstruction("left",-1);
+   rover.addInstruction("go",0);
+   rover.addInstruction("right",-1);
+   rover.addInstruction("go",0);
+   rover.addInstruction("hop",-1);
+   rover.addInstruction("go",0);
+   rover.addInstruction("infect",-1);
+   rover.addInstruction("go",0);
 
    // ----
    // trap
@@ -126,12 +126,22 @@ Print every grid.
 addCreature(std::string name, Species* species, int row, int column, char* direction){
 */
    World darwin1 = World(8,8);
-   darwin1.addCreature("food1", &food, 0, 0, "east");
-   darwin1.addCreature("hopper1", &hopper, 3, 3, "north");
-   darwin1.addCreature("hopper2", &hopper, 3, 4, "east");
-   darwin1.addCreature("hopper3", &hopper, 4, 4, "south");
-   darwin1.addCreature("hopper4", &hopper, 4, 3, "west");
-   darwin1.addCreature("food2", &food, 7, 7, "north");
+cout << "*** 1 ***" << endl;
+   Creature c1 = Creature("food1", &food, 0, 0, "east",&darwin1);
+   Creature c2 = Creature("hopper1", &hopper, 3, 3, "north",&darwin1);
+   Creature c3 = Creature("hopper2", &hopper, 3, 4, "east",&darwin1);
+   Creature c4 = Creature("hopper3", &hopper, 4, 4, "south",&darwin1);
+   Creature c5 = Creature("hopper4", &hopper, 4, 3, "west",&darwin1);
+   Creature c6 = Creature("food2", &food, 7, 7, "north",&darwin1);
+cout << "*** 2 ***" << endl;
+   darwin1.addCreature(&c1);
+   darwin1.addCreature(&c2);
+   darwin1.addCreature(&c3);
+   darwin1.addCreature(&c4);
+   darwin1.addCreature(&c5);
+   darwin1.addCreature(&c6);
+cout << "*** 3 ***" << endl;
+   darwin1.run(5);
    }
    catch (const invalid_argument&) {
        assert(false);}

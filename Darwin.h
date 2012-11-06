@@ -72,8 +72,6 @@ class Creature{
       World* belongsTo;
       std::string name;
       int direction;
-   private:
-      
       int programCounter;
       int row;
       int column;
@@ -157,7 +155,7 @@ class  World{
       void printWorld(){
          cout << endl;
          cout << "------------------" << endl;
-        // cout << "World at turn: " << turn << endl;
+        cout << "World at turn: " << worldTurn << endl;
          cout << "------------------" << endl;
          for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
@@ -181,42 +179,51 @@ class  World{
 
 void Creature::execute(Instruction* instructionToExecute){
    int x = instructionToExecute->n;
-   ++creatureTurn;
    switch ((*instructionToExecute).instructionType){
       case 0:{
+         ++creatureTurn;
          if(direction == 0 && belongsTo->isEmpty(row-1,column)){
             belongsTo->updateLocation(row, column, row - 1, column, this);
-            row++;
+            --row;
+            ++programCounter;
          }
-         if(direction == 1 && belongsTo->isEmpty(row,column+1)){
+         else if(direction == 1 && belongsTo->isEmpty(row,column+1)){
             belongsTo->updateLocation(row, column, row, column+1, this);
-            row++;
+            ++column;
+            ++programCounter;
          } 
-         if(direction == 2 && belongsTo->isEmpty(row+1,column)){
+         else if(direction == 2 && belongsTo->isEmpty(row+1,column)){
             belongsTo->updateLocation(row, column, row+1, column, this);
-            row++;
+            ++row;
+            ++programCounter;
          } 
-         if(direction == 3 && belongsTo->isEmpty(row,column-1)){
+         else if(direction == 3 && belongsTo->isEmpty(row,column-1)){
             belongsTo->updateLocation(row, column, row, column-1, this);
-            row++;
+            --column;
+            ++programCounter;
          } 
          break;   
       }
       case 1:{
+         ++creatureTurn;
          if(direction == 0)
             direction = 3;
          else
             --direction;
+         ++programCounter;
          break;
       }
       case 2:{
+         ++creatureTurn;
          if(direction == 3)
             direction = 0;
          else
             ++direction;
+         ++programCounter;
          break;
       }
       case 3:{
+         ++creatureTurn;
          if(direction == 0){
             if(belongsTo->isEnemy(row-1,column,this)){
                belongsTo->infect(row-1,column,this);
@@ -341,15 +348,18 @@ void Creature::execute(Instruction* instructionToExecute){
 
 }
 void World::run(int turns){
+   printWorld();
    for(int i = 0; i< turns; i++){
       for (int k = 0; k < rows; k++){
          for (int j = 0; j < columns; j++){
-            if(_w[k][j]->creatureTurn == worldTurn)
-               _w[k][j]->execute(&(_w[k][j]->type.program[_w[k][j]->programCounter]));    
+            if(_w[k][j] != NULL){
+               while(_w[k][j]->creatureTurn <= worldTurn)
+                  _w[k][j]->execute(&(_w[k][j]->type.program[_w[k][j]->programCounter]));}    
          }  
       }
       ++worldTurn;
       printWorld();
+
    }
 }
 
