@@ -139,6 +139,26 @@ class  World{
           return false;
 	return true;
       }
+      bool isWall(int row, int column){
+	if(row < 0 || column < 0 || row >= rows || column >= columns)
+          return true;
+        else 
+          return false;
+      }
+      bool isEnemy(int row, int column, Creature* checker){
+	if(row < 0 || column < 0 || row >= rows || column >= columns)
+          return false;
+        else if(_w[row][column] != NULL)
+          return false;
+	else if(checker->type.speciesType != _w[row][column]->type.speciesType)
+          return false;
+        else
+           return true;
+      }
+      void infect(int row, int column, Creature* infector){
+      _w[row][column]->type = infector->type;
+      _w[row][column]->programCounter = 0;
+      }
 
       void printWorld(){
          cout << endl;
@@ -166,18 +186,19 @@ class  World{
 };
 
 void Creature::execute(Instruction* instructionToExecute){
+   int x = instructionToExecute->n;
    switch ((*instructionToExecute).instructionType){
       case 0:{
-         if(direction == 0 && belongsTo->isEmpty(row+1,column)){
-            belongsTo->updateLocation(row, column, row + 1, column, this);
+         if(direction == 0 && belongsTo->isEmpty(row-1,column)){
+            belongsTo->updateLocation(row, column, row - 1, column, this);
             row++;
          }
          if(direction == 1 && belongsTo->isEmpty(row,column+1)){
             belongsTo->updateLocation(row, column, row, column+1, this);
             row++;
          } 
-         if(direction == 2 && belongsTo->isEmpty(row-1,column)){
-            belongsTo->updateLocation(row, column, row - 1, column, this);
+         if(direction == 2 && belongsTo->isEmpty(row+1,column)){
+            belongsTo->updateLocation(row, column, row+1, column, this);
             row++;
          } 
          if(direction == 3 && belongsTo->isEmpty(row,column-1)){
@@ -186,20 +207,127 @@ void Creature::execute(Instruction* instructionToExecute){
          }    
       }
       case 1:{
+         if(direction == 0)
+            direction = 3;
+         else
+            --direction;
       }
       case 2:{
+         if(direction == 3)
+            direction = 0;
+         else
+            ++direction;
       }
       case 3:{
+         if(direction == 0){
+            if(belongsTo->isEnemy(row-1,column,this))
+               belongsTo->infect(row-1,column,this);
+            else
+               ++programCounter;
+         }
+         if(direction == 1){
+            if(belongsTo->isEnemy(row,column+1,this))
+               belongsTo->infect(row-1,column,this);
+            else
+               ++programCounter;
+         } 
+         if(direction == 2){
+            if(belongsTo->isEnemy(row+1,column,this))
+               belongsTo->infect(row-1,column,this);
+            else
+               ++programCounter;
+         } 
+         if(direction == 3){
+            if(belongsTo->isEnemy(row,column-1,this))
+               belongsTo->infect(row-1,column,this);
+            else
+               ++programCounter;     
+         }
+
       }
       case 4:{
+         if(direction == 0){
+            if(belongsTo->isEmpty(row-1,column))
+               programCounter= x;
+            else
+               ++programCounter;
+         }
+         if(direction == 1){
+            if(belongsTo->isEmpty(row,column+1))
+               programCounter= x;
+            else
+               ++programCounter;
+         } 
+         if(direction == 2){
+            if(belongsTo->isEmpty(row+1,column))
+               programCounter= x;
+            else
+               ++programCounter;
+         } 
+         if(direction == 3){
+            if(belongsTo->isEmpty(row,column-1))
+               programCounter= x;
+            else
+               ++programCounter;     
+         }
       }
       case 5:{
+         if(direction == 0){
+            if(belongsTo->isWall(row-1,column))
+               programCounter= x;
+            else
+               ++programCounter;
+         }
+         if(direction == 1){
+            if(belongsTo->isWall(row,column+1))
+               programCounter= x;
+            else
+               ++programCounter;
+         } 
+         if(direction == 2){
+            if(belongsTo->isWall(row+1,column))
+               programCounter= x;
+            else
+               ++programCounter;
+         } 
+         if(direction == 3){
+            if(belongsTo->isWall(row,column-1))
+               programCounter= x;
+            else
+               ++programCounter;     
+         }
       }  
       case 6:{
+
       }
       case 7:{
+         if(direction == 0){
+            if(belongsTo->isEnemy(row-1,column,this))
+               programCounter= x;
+            else
+               ++programCounter;
+         }
+         if(direction == 1){
+            if(belongsTo->isEnemy(row,column+1,this))
+               programCounter= x;
+            else
+               ++programCounter;
+         } 
+         if(direction == 2){
+            if(belongsTo->isEnemy(row+1,column,this))
+               programCounter= x;
+            else
+               ++programCounter;
+         } 
+         if(direction == 3){
+            if(belongsTo->isEnemy(row,column-1,this))
+               programCounter= x;
+            else
+               ++programCounter;     
+         }
       }
       case 8:{
+         programCounter = x;
       }
    }
 
