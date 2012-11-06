@@ -46,7 +46,7 @@ class Species{
       char speciesType;
       std::vector<Instruction> program;
       Species() {}
-      Species(std::string name) {
+      Species(std::string name) : program(0,Instruction("",0)) {
          if(strcmp(name.c_str(),"hopper") == 0)
             speciesType = 'h';
          else if (strcmp(name.c_str(),"rover") == 0)
@@ -86,6 +86,7 @@ class Creature{
          row = r;
          column = c;
          name = n;
+         creatureTurn = 0;
          if(strcmp(facing.c_str(),"north") == 0)
             direction = 0;
          else if (strcmp(facing.c_str(),"east") == 0)
@@ -101,7 +102,7 @@ class Creature{
 
 class  World{
    public:
-      int turn;
+      int worldTurn;
       int rows;
       int columns;
    private:
@@ -109,6 +110,7 @@ class  World{
    public:
       World(){}
       World(int r, int c) {
+        worldTurn = 0;
         _w = std::vector< std::vector<Creature*> >(r, std::vector<Creature*>(c));
         rows = r;
         columns = c;
@@ -124,14 +126,6 @@ class  World{
       _w[newCreature->row][newCreature->column] = newCreature;
       }
 
-/*      void addCreature(std::string name, Species* species, int row, int column, std::string direction){
-         Creature newCreature = Creature(name, species, row, column, direction, this);
-        cout << &newCreature << endl;
-	Creature* c = &newCreature;
-        cout << c << endl;
-         _w[row][column] = c;
-      }
-*/
       bool isEmpty(int row, int column){
 	if(row < 0 || column < 0 || row >= rows || column >= columns)
           return false;
@@ -187,6 +181,7 @@ class  World{
 
 void Creature::execute(Instruction* instructionToExecute){
    int x = instructionToExecute->n;
+   ++creatureTurn;
    switch ((*instructionToExecute).instructionType){
       case 0:{
          if(direction == 0 && belongsTo->isEmpty(row-1,column)){
@@ -204,46 +199,49 @@ void Creature::execute(Instruction* instructionToExecute){
          if(direction == 3 && belongsTo->isEmpty(row,column-1)){
             belongsTo->updateLocation(row, column, row, column-1, this);
             row++;
-         }    
+         } 
+         break;   
       }
       case 1:{
          if(direction == 0)
             direction = 3;
          else
             --direction;
+         break;
       }
       case 2:{
          if(direction == 3)
             direction = 0;
          else
             ++direction;
+         break;
       }
       case 3:{
          if(direction == 0){
-            if(belongsTo->isEnemy(row-1,column,this))
+            if(belongsTo->isEnemy(row-1,column,this)){
                belongsTo->infect(row-1,column,this);
-            else
                ++programCounter;
+            }
          }
          if(direction == 1){
-            if(belongsTo->isEnemy(row,column+1,this))
+            if(belongsTo->isEnemy(row,column+1,this)){
                belongsTo->infect(row-1,column,this);
-            else
                ++programCounter;
+           }
          } 
          if(direction == 2){
-            if(belongsTo->isEnemy(row+1,column,this))
+            if(belongsTo->isEnemy(row+1,column,this)){
                belongsTo->infect(row-1,column,this);
-            else
                ++programCounter;
+            }
          } 
          if(direction == 3){
-            if(belongsTo->isEnemy(row,column-1,this))
+            if(belongsTo->isEnemy(row,column-1,this)){
                belongsTo->infect(row-1,column,this);
-            else
-               ++programCounter;     
+               ++programCounter;
+              }
          }
-
+         break;
       }
       case 4:{
          if(direction == 0){
@@ -270,6 +268,7 @@ void Creature::execute(Instruction* instructionToExecute){
             else
                ++programCounter;     
          }
+         break;
       }
       case 5:{
          if(direction == 0){
@@ -296,6 +295,7 @@ void Creature::execute(Instruction* instructionToExecute){
             else
                ++programCounter;     
          }
+         break;
       }  
       case 6:{
          srand(0);
@@ -304,6 +304,7 @@ void Creature::execute(Instruction* instructionToExecute){
             ++programCounter;
          else
             programCounter = x;
+         break;
       }
       case 7:{
          if(direction == 0){
@@ -330,13 +331,33 @@ void Creature::execute(Instruction* instructionToExecute){
             else
                ++programCounter;     
          }
+         break;
       }
       case 8:{
          programCounter = x;
+         break;
       }
    }
 
 }
 void World::run(int turns){
+   for(int i = 0; i< turns; i++){
+      for (int k = 0; k < rows; k++){
+         for (int j = 0; j < columns; j++){
+            if(_w[k][j]->creatureTurn == worldTurn)
+               _w[k][j]->execute(&(_w[k][j]->type.program[_w[k][j]->programCounter]));    
+         }  
+      }
+      ++worldTurn;
+      printWorld();
+   }
 }
+
+
+
+
+
+
+
+
 

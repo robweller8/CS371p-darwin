@@ -229,6 +229,157 @@ struct TestDarwin : CppUnit::TestFixture {
            bool result = w.isEmpty(1,1);
            CPPUNIT_ASSERT(!result);
 	}
+    // --------
+	// testHop1
+	void testHop1() {
+           World w(2, 2);
+           Species hopper = Species("hopper");
+           hopper.addInstruction("hop",-1);
+           Creature h = Creature("hopper1", &hopper, 1, 0, "north", &w);
+           w.addCreature(&h);
+ 		   w.printWorld();
+           h.execute(&(hopper.program[0]));
+ 		   w.printWorld();
+           bool result = w.isEmpty(0,0);
+           CPPUNIT_ASSERT(!result);
+	}
+    // --------
+	// testHop2
+	void testHop2() {
+           World w(2, 2);
+           Species hopper = Species("hopper");
+           hopper.addInstruction("hop",-1);
+           Creature h = Creature("hopper1", &hopper, 1, 0, "east", &w);
+           w.addCreature(&h);
+ 		   w.printWorld();
+           h.execute(&(hopper.program[0]));
+ 		   w.printWorld();
+           bool result = w.isEmpty(1,1);
+           CPPUNIT_ASSERT(!result);
+	}
+    // --------
+	// testHop3
+	void testHop3() {
+           World w(2, 2);
+           Species hopper = Species("hopper");
+           hopper.addInstruction("hop",-1);
+           Creature h = Creature("hopper1", &hopper, 0, 0, "south", &w);
+           w.addCreature(&h);
+ 		   w.printWorld();
+           h.execute(&(hopper.program[0]));
+ 		   w.printWorld();
+           bool result = w.isEmpty(1,0);
+           CPPUNIT_ASSERT(!result);
+	}
+    // --------
+	// testLeft1
+	void testLeft1() {
+           World w(2, 2);
+           Species hopper = Species("hopper");
+           hopper.addInstruction("left",-1);
+           Creature h = Creature("hopper1", &hopper, 0, 0, "north", &w);
+           w.addCreature(&h);
+           h.execute(&(hopper.program[0]));
+           bool result = h.direction == 3;
+           CPPUNIT_ASSERT(result);
+	}
+    // --------
+	// testLeft2
+	void testLeft2() {
+           World w(2, 2);
+           Species hopper = Species("hopper");
+           hopper.addInstruction("left",-1);
+           Creature h = Creature("hopper1", &hopper, 0, 0, "south", &w);
+           w.addCreature(&h);
+           h.execute(&(hopper.program[0]));
+           bool result = h.direction == 1;
+           CPPUNIT_ASSERT(result);
+	}
+    // --------
+	// testLeft3
+	void testLeft3() {
+           World w(2, 2);
+           Species hopper = Species("hopper");
+           hopper.addInstruction("left",-1);
+           Creature h = Creature("hopper1", &hopper, 0, 0, "east", &w);
+           w.addCreature(&h);
+           h.execute(&(hopper.program[0]));
+           bool result = h.direction == 0;
+           CPPUNIT_ASSERT(result);
+	}
+    // --------
+	// testRight1
+	void testRight1() {
+           World w(2, 2);
+           Species hopper = Species("hopper");
+           hopper.addInstruction("right",-1);
+           Creature h = Creature("hopper1", &hopper, 0, 0, "north", &w);
+           w.addCreature(&h);
+           h.execute(&(hopper.program[0]));
+           bool result = h.direction == 1;
+           CPPUNIT_ASSERT(result);
+	}
+    // --------
+	// testRight2
+	void testRight2() {
+           World w(2, 2);
+           Species hopper = Species("hopper");
+           hopper.addInstruction("right",-1);
+           Creature h = Creature("hopper1", &hopper, 0, 0, "south", &w);
+           w.addCreature(&h);
+           h.execute(&(hopper.program[0]));
+           bool result = h.direction == 3;
+           CPPUNIT_ASSERT(result);
+	}
+    // --------
+	// testRight3
+	void testRight3() {
+           World w(2, 2);
+           Species hopper = Species("hopper");
+           hopper.addInstruction("right",-1);
+           Creature h = Creature("hopper1", &hopper, 0, 0, "east", &w);
+           w.addCreature(&h);
+           h.execute(&(hopper.program[0]));
+           bool result = h.direction == 2;
+           CPPUNIT_ASSERT(result);
+	}
+    // --------
+	// testIfEmpty1
+	void testIfEmpty1 () {
+           World w(2, 2);
+           Species hopper = Species("hopper");
+           hopper.addInstruction("if_empty",-1);
+		   hopper.add
+           Creature h = Creature("hopper1", &hopper, 0, 0, "east", &w);
+           w.addCreature(&h);
+           h.execute(&(hopper.program[0]));
+           bool result = h.direction == 2;
+           CPPUNIT_ASSERT(result);
+	}
+    // --------
+	// testIfEmpty2
+	void testIfEmpty2 () {
+           World w(2, 2);
+           Species hopper = Species("hopper");
+           hopper.addInstruction("if_right",-1);
+           Creature h = Creature("hopper1", &hopper, 0, 0, "east", &w);
+           w.addCreature(&h);
+           h.execute(&(hopper.program[0]));
+           bool result = h.direction == 2;
+           CPPUNIT_ASSERT(result);
+	}
+    // --------
+	// testIfEmpty3
+	void testIfEmpty3 () {
+           World w(2, 2);
+           Species hopper = Species("hopper");
+           hopper.addInstruction("if_empty",-1);
+           Creature h = Creature("hopper1", &hopper, 0, 0, "east", &w);
+           w.addCreature(&h);
+           h.execute(&(hopper.program[0]));
+           bool result = h.direction == 2;
+           CPPUNIT_ASSERT(result);
+	}
 
 	// -----
 	// suite
@@ -246,6 +397,15 @@ struct TestDarwin : CppUnit::TestFixture {
 	CPPUNIT_TEST(testUpdateLocation1);
 	CPPUNIT_TEST(testUpdateLocation2);
 	CPPUNIT_TEST(testUpdateLocation3);
+	CPPUNIT_TEST(testHop1);
+	CPPUNIT_TEST(testHop2);
+	CPPUNIT_TEST(testHop3);
+	CPPUNIT_TEST(testLeft1);
+	CPPUNIT_TEST(testLeft2);
+	CPPUNIT_TEST(testLeft3);
+	CPPUNIT_TEST(testRight1);
+	CPPUNIT_TEST(testRight2);
+	CPPUNIT_TEST(testRight3);
 	CPPUNIT_TEST_SUITE_END();
 };
 
