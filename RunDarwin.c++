@@ -123,7 +123,7 @@ int main () {
    9: go 1
  */
 
-   best.addInstruction("left",-1);
+   best.addInstruction("right",-1);
    best.addInstruction("if_enemy",7);
    best.addInstruction("if_empty",5);
    best.addInstruction("left",-1);

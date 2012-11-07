@@ -387,7 +387,7 @@ void Creature::execute(){
          break;
       }  
       case 6:{
-         srand(0);
+
          int random = rand();
          if(random%2 == 0)
             ++programCounter;
