@@ -219,8 +219,14 @@ class  World{
          cout << "------------------" << endl;
         cout << "World at turn: " << worldTurn << endl;
          cout << "------------------" << endl;
+         cout << "  ";
+         for (int p = 0; p < columns; p++)
+            cout << p % 10;
+         cout << endl;
          for (int i = 0; i < rows; i++){
+            cout << i % 10 << " ";
             for (int j = 0; j < columns; j++){
+              
                if (_w[i][j] == NULL){
                   cout << ".";
                }
@@ -230,7 +236,7 @@ class  World{
             } 
             cout << endl; 
          }
-         cout << "------------------" << endl;
+         cout << endl;
       }
 // ----
 // World::updateLocation
