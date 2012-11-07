@@ -59,6 +59,15 @@ class Species{
          else if (strcmp(name.c_str(),"best") == 0)
             speciesType = 'b';
       }
+// ----
+// addInstruction
+// ----
+
+/**
+* Used to add a particular instruction to a Species' program.
+* @param name defines what action or control that instruction will do. 
+* @param x in the case of a control instruction, tells us what line to move to, -1 for action instructions.
+*/
       void addInstruction (std::string name, int n){
          Instruction instruction = Instruction(name, n);
          program.push_back(instruction);
@@ -79,7 +88,7 @@ class Creature{
       
      
    public:
-      Creature(std::string n, Species* species,int r,int c,std::string facing, World* world){
+      Creature(std::string n, Species* species,int r,int c,int facing, World* world){
          belongsTo = world;
          type = *species;
          row = r;
@@ -87,14 +96,7 @@ class Creature{
          name = n;
          creatureTurn = 0;
          programCounter = 0;
-         if(strcmp(facing.c_str(),"north") == 0)
-            direction = 0;
-         else if (strcmp(facing.c_str(),"east") == 0)
-            direction = 1;
-         else if (strcmp(facing.c_str(),"south") == 0)
-            direction = 2;
-         else if (strcmp(facing.c_str(),"west") == 0)
-            direction = 3;
+         direction = facing;
       }
       void execute();
 };
@@ -121,11 +123,27 @@ class  World{
             }  
          }
       }
+// ----
+// addCreature
+// ----
 
+/**
+* Used to add a pointer to a certain creature to our grid.
+* @param creature is a pointer to the creature we are adding.
+*/
       void addCreature(Creature* newCreature){
       _w[newCreature->row][newCreature->column] = newCreature;
       }
+// ----
+// isEmpty
+// ----
 
+/**
+* Checks to see if a given spot on the grid contains a creature.
+* @param row the vertical index of the spot being checked.
+* @param column the horizontal column index of the spot being checked.
+* @return bool .
+*/
       bool isEmpty(int row, int column){
 	if(row < 0 || column < 0 || row >= rows || column >= columns)
           return false;
@@ -133,27 +151,64 @@ class  World{
           return false;
 	return true;
       }
+// ----
+// isWall
+// ----
+
+/**
+* Checks to see if a an index is the edge of the grid.
+* @param row the vertical index being checked.
+* @param column horizontal the index being checked.
+* @return bool.
+*/
       bool isWall(int row, int column){
 	if(row < 0 || column < 0 || row >= rows || column >= columns)
           return true;
         else 
           return false;
       }
+// ----
+// isEnemy
+// ----
+
+/**
+* checks if a given spot contains a creature that is not of the same species of the creature checking.
+* @param row the vertical index of the spot being checked
+* @param column the horizontal index of the spot being checked
+* @param checker the species that is checking if the spot is a different species.
+* @return bool.
+*/
       bool isEnemy(int row, int column, Creature* checker){
 	if(row < 0 || column < 0 || row >= rows || column >= columns){
           return false;}
         if(_w[row][column] == NULL){
-          return false;}
-	if(checker->type.speciesType != _w[row][column]->type.speciesType){
+          return false;} 
+	if(checker->type.speciesType == _w[row][column]->type.speciesType){
           return false;}
         else{
            return true;}
       }
+// ----
+// infect
+// ----
+
+/**
+* Changes the speices of the creature being infected to the species of the creature infecting, and resets its program counter.
+* @param row the vertical index of the creature being infected.
+* @param column the horizontal index of the creature being infected.
+* @param infector a pointer to the creature that is infecting the other creature.
+*/
       void infect(int row, int column, Creature* infector){
       _w[row][column]->type = infector->type;
       _w[row][column]->programCounter = 0;
       }
+// ----
+// printWorld
+// ----
 
+/**
+* Used to print out the current state of the word, a "." if there is no creature at that spot.
+*/
       void printWorld(){
          cout << endl;
          cout << "------------------" << endl;
@@ -172,37 +227,56 @@ class  World{
          }
          cout << "------------------" << endl;
       }
+// ----
+// updateLocation
+// ----
+
+/**
+* Moves a creature to a new spot in the grid, used in case of a "hop", sets old location to NULL.
+* @param row the vertical index where the creature used to be.
+* @param column the horizontal index where the creature used to be.
+* @param newrow the vertical index of where the creature will be placed.
+* @param newcol the horizontal index of where the creature will be placed.
+* @param creature a pointer to the creature that is being moved.
+*/
       void updateLocation(int row, int col, int newrow, int newcol, Creature* creature){
 	_w[newrow][newcol] = creature;
         _w[row][col] = NULL;
       }
-      void run(int turns);
+      void run(int turns, int printEvery);
 };
+// ----
+// execute
+// ----
 
+/**
+* Used to carry out a single instruction for this creature's species' program that is pointed to by the program counter.
+*/
 void Creature::execute(){
    int x = type.program[programCounter].n;
    switch (type.program[programCounter].instructionType){
       case 0:{
-         if(direction == 0 && belongsTo->isEmpty(row-1,column)){
-            belongsTo->updateLocation(row, column, row - 1, column, this);
-            --row;
-            ++programCounter;
-         }
-         else if(direction == 1 && belongsTo->isEmpty(row,column+1)){
-            belongsTo->updateLocation(row, column, row, column+1, this);
-            ++column;
-            ++programCounter;
-         } 
-         else if(direction == 2 && belongsTo->isEmpty(row+1,column)){
-            belongsTo->updateLocation(row, column, row+1, column, this);
-            ++row;
-            ++programCounter;
-         } 
-         else if(direction == 3 && belongsTo->isEmpty(row,column-1)){
+         if(direction == 0 && belongsTo->isEmpty(row,column-1)){
             belongsTo->updateLocation(row, column, row, column-1, this);
             --column;
             ++programCounter;
          } 
+         else if(direction == 1 && belongsTo->isEmpty(row-1,column)){
+            belongsTo->updateLocation(row, column, row - 1, column, this);
+            --row;
+            ++programCounter;
+         }
+         else if(direction == 2 && belongsTo->isEmpty(row,column+1)){
+            belongsTo->updateLocation(row, column, row, column+1, this);
+            ++column;
+            ++programCounter;
+         } 
+         else if(direction == 3 && belongsTo->isEmpty(row+1,column)){
+            belongsTo->updateLocation(row, column, row+1, column, this);
+            ++row;
+            ++programCounter;
+         } 
+
          ++creatureTurn;
          break;   
       }
@@ -225,86 +299,86 @@ void Creature::execute(){
          break;
       }
       case 3:{
-         
          if(direction == 0){
+            if(belongsTo->isEnemy(row,column-1,this)){
+               belongsTo->infect(row,column-1,this);
+               ++programCounter;
+              }
+         }
+         if(direction == 1){
             if(belongsTo->isEnemy(row-1,column,this)){
                belongsTo->infect(row-1,column,this);
                ++programCounter;
             }
          }
-         if(direction == 1){
+         if(direction == 2){
             if(belongsTo->isEnemy(row,column+1,this)){
-               belongsTo->infect(row-1,column,this);
+               belongsTo->infect(row,column+1,this);
                ++programCounter;
            }
          } 
-         if(direction == 2){
+         if(direction == 3){
             if(belongsTo->isEnemy(row+1,column,this)){
-               belongsTo->infect(row-1,column,this);
+               belongsTo->infect(row+1,column,this);
                ++programCounter;
             }
          } 
-         if(direction == 3){
-            if(belongsTo->isEnemy(row,column-1,this)){
-               belongsTo->infect(row-1,column,this);
-               ++programCounter;
-              }
-         }
+
          ++creatureTurn;
          break;
       }
       case 4:{
          if(direction == 0){
-            if(belongsTo->isEmpty(row-1,column))
-               programCounter= x;
-            else
-               ++programCounter;
-         }
-         if(direction == 1){
-            if(belongsTo->isEmpty(row,column+1))
-               programCounter= x;
-            else
-               ++programCounter;
-         } 
-         if(direction == 2){
-            if(belongsTo->isEmpty(row+1,column))
-               programCounter= x;
-            else
-               ++programCounter;
-         } 
-         if(direction == 3){
             if(belongsTo->isEmpty(row,column-1))
                programCounter= x;
             else
                ++programCounter;     
          }
-         break;
-      }
-      case 5:{
-         if(direction == 0){
-            if(belongsTo->isWall(row-1,column))
+         if(direction == 1){
+            if(belongsTo->isEmpty(row-1,column))
                programCounter= x;
             else
                ++programCounter;
          }
-         if(direction == 1){
-            if(belongsTo->isWall(row,column+1))
-               programCounter= x;
-            else
-               ++programCounter;
-         } 
          if(direction == 2){
-            if(belongsTo->isWall(row+1,column))
+            if(belongsTo->isEmpty(row,column+1))
                programCounter= x;
             else
                ++programCounter;
          } 
          if(direction == 3){
+            if(belongsTo->isEmpty(row+1,column))
+               programCounter= x;
+            else
+               ++programCounter;
+         } 
+         break;
+      }
+      case 5:{
+         if(direction == 0){
             if(belongsTo->isWall(row,column-1))
                programCounter= x;
             else
                ++programCounter;     
          }
+         if(direction == 1){
+            if(belongsTo->isWall(row-1,column))
+               programCounter= x;
+            else
+               ++programCounter;
+         }
+         if(direction == 2){
+            if(belongsTo->isWall(row,column+1))
+               programCounter= x;
+            else
+               ++programCounter;
+         } 
+         if(direction == 3){
+            if(belongsTo->isWall(row+1,column))
+               programCounter= x;
+            else
+               ++programCounter;
+         } 
          break;
       }  
       case 6:{
@@ -318,29 +392,29 @@ void Creature::execute(){
       }
       case 7:{
          if(direction == 0){
-            if(belongsTo->isEnemy(row-1,column,this))
-               programCounter= x;
-            else
-               ++programCounter;
-         }
-         if(direction == 1){
-            if(belongsTo->isEnemy(row,column+1,this))
-               programCounter= x;
-            else
-               ++programCounter;
-         } 
-         if(direction == 2){
-            if(belongsTo->isEnemy(row+1,column,this)){
-               programCounter= x;}
-            else{
-               ++programCounter;}
-         } 
-         if(direction == 3){
             if(belongsTo->isEnemy(row,column-1,this))
                programCounter= x;
             else
                ++programCounter;     
          }
+         if(direction == 1){
+            if(belongsTo->isEnemy(row-1,column,this))
+               programCounter= x;
+            else
+               ++programCounter;
+         }
+         if(direction == 2){
+            if(belongsTo->isEnemy(row,column+1,this))
+               programCounter= x;
+            else
+               ++programCounter;
+         } 
+         if(direction == 3){
+            if(belongsTo->isEnemy(row+1,column,this)){
+               programCounter= x;}
+            else{
+               ++programCounter;}
+         } 
          break;
       }
       case 8:{
@@ -350,29 +424,32 @@ void Creature::execute(){
    }
 
 }
-void World::run(int turns){
+// ----
+// run
+// ----
+
+/**
+* This is used to actually run the entire world, in row major order all creatures get a turn for as many turns are assigned.
+* @param turns an int of the times that the world will be run, every species gets to execute this number of action instructions. 
+* @param printEvery the offset of how often printWorld() will be called.
+*/
+void World::run(int turns, int printEvery){
+   int printTime;
    printWorld();
-//cout << "before loop"<< endl;
+   
    for(int i = 0; i< turns; i++){
       for (int k = 0; k < rows; k++){
-//cout << " k" << endl;
          for (int j = 0; j < columns; j++){
-//cout << "j" << endl;
             if(_w[k][j] != NULL){
-//cout << "inside if " << endl;
-               while(_w[k][j] != NULL && _w[k][j]->creatureTurn == worldTurn){
-//cout << "inside while" << endl;
-                  _w[k][j]->execute();
-//cout << "end of while" << endl;               
-               }
-
-
-
+               while(_w[k][j] != NULL && _w[k][j]->creatureTurn == worldTurn)
+                  _w[k][j]->execute();             
             }    
          }  
       }
       ++worldTurn;
-      printWorld();
+      printTime = worldTurn % printEvery;
+      if(printTime == 0)
+         printWorld();
 
    }
 }

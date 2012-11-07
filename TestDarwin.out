@@ -1,96 +1,70 @@
-==11931== Memcheck, a memory error detector
-==11931== Copyright (C) 2002-2011, and GNU GPL'd, by Julian Seward et al.
-==11931== Using Valgrind-3.7.0 and LibVEX; rerun with -h for copyright info
-==11931== Command: TestDarwin
-==11931== 
+==25092== Memcheck, a memory error detector
+==25092== Copyright (C) 2002-2011, and GNU GPL'd, by Julian Seward et al.
+==25092== Using Valgrind-3.7.0 and LibVEX; rerun with -h for copyright info
+==25092== Command: TestDarwin
+==25092== 
 TestDarwin.c++
-.....
+.......
 ------------------
-------------------
-..
-h.
-------------------
-.
-------------------
-------------------
-..
-..
-------------------
-..
-------------------
+World at turn: 0
 ------------------
 ..
 h.
 ------------------
 .
 ------------------
-------------------
-..........
-hhhhh.....
-..........
-..........
-..........
-..........
-..........
-..........
-..........
-..........
+World at turn: 0
 ------------------
 ..
-------------------
-------------------
-..
-h.
-------------------
-
-------------------
-------------------
-h.
 ..
 ------------------
-.
-------------------
-------------------
-h.
-..
-------------------
-
-------------------
-------------------
-..
-h.
-------------------
-.
-------------------
-------------------
-..
-h.
-------------------
-
-------------------
-------------------
-..
-.h
-------------------
-
-
-
-OK (13 tests)
-
-
-Done.
-==11931== 
-==11931== HEAP SUMMARY:
-==11931==     in use at exit: 122,880 bytes in 6 blocks
-==11931==   total heap usage: 709 allocs, 703 frees, 273,157 bytes allocated
-==11931== 
-==11931== LEAK SUMMARY:
-==11931==    definitely lost: 0 bytes in 0 blocks
-==11931==    indirectly lost: 0 bytes in 0 blocks
-==11931==      possibly lost: 0 bytes in 0 blocks
-==11931==    still reachable: 122,880 bytes in 6 blocks
-==11931==         suppressed: 0 bytes in 0 blocks
-==11931== Rerun with --leak-check=full to see details of leaked memory
-==11931== 
-==11931== For counts of detected and suppressed errors, rerun with: -v
-==11931== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 4 from 4)
+==25092== Invalid write of size 1
+==25092==    at 0x4039FB: Species::operator=(Species const&) (in /v/filer4b/v38q001/rweller/objecto/darwin/CS371p-darwin/TestDarwin)
+==25092==    by 0x403F41: World::infect(int, int, Creature*) (in /v/filer4b/v38q001/rweller/objecto/darwin/CS371p-darwin/TestDarwin)
+==25092==    by 0x407562: TestDarwin::testInfect1() (in /v/filer4b/v38q001/rweller/objecto/darwin/CS371p-darwin/TestDarwin)
+==25092==    by 0x414AB3: CppUnit::TestCaller<TestDarwin>::runTest() (in /v/filer4b/v38q001/rweller/objecto/darwin/CS371p-darwin/TestDarwin)
+==25092==    by 0x4E558E9: CppUnit::TestCaseMethodFunctor::operator()() const (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E48E33: CppUnit::DefaultProtector::protect(CppUnit::Functor const&, CppUnit::ProtectorContext const&) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E51E66: CppUnit::ProtectorChain::protect(CppUnit::Functor const&, CppUnit::ProtectorContext const&) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E5C593: CppUnit::TestResult::protect(CppUnit::Functor const&, CppUnit::Test*, std::string const&) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E55687: CppUnit::TestCase::run(CppUnit::TestResult*) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E55DC2: CppUnit::TestComposite::doRunChildTests(CppUnit::TestResult*) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E55CE5: CppUnit::TestComposite::run(CppUnit::TestResult*) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E5C1B9: CppUnit::TestResult::runTest(CppUnit::Test*) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==  Address 0x8 is not stack'd, malloc'd or (recently) free'd
+==25092== 
+==25092== 
+==25092== Process terminating with default action of signal 11 (SIGSEGV)
+==25092==  Access not within mapped region at address 0x8
+==25092==    at 0x4039FB: Species::operator=(Species const&) (in /v/filer4b/v38q001/rweller/objecto/darwin/CS371p-darwin/TestDarwin)
+==25092==    by 0x403F41: World::infect(int, int, Creature*) (in /v/filer4b/v38q001/rweller/objecto/darwin/CS371p-darwin/TestDarwin)
+==25092==    by 0x407562: TestDarwin::testInfect1() (in /v/filer4b/v38q001/rweller/objecto/darwin/CS371p-darwin/TestDarwin)
+==25092==    by 0x414AB3: CppUnit::TestCaller<TestDarwin>::runTest() (in /v/filer4b/v38q001/rweller/objecto/darwin/CS371p-darwin/TestDarwin)
+==25092==    by 0x4E558E9: CppUnit::TestCaseMethodFunctor::operator()() const (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E48E33: CppUnit::DefaultProtector::protect(CppUnit::Functor const&, CppUnit::ProtectorContext const&) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E51E66: CppUnit::ProtectorChain::protect(CppUnit::Functor const&, CppUnit::ProtectorContext const&) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E5C593: CppUnit::TestResult::protect(CppUnit::Functor const&, CppUnit::Test*, std::string const&) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E55687: CppUnit::TestCase::run(CppUnit::TestResult*) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E55DC2: CppUnit::TestComposite::doRunChildTests(CppUnit::TestResult*) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E55CE5: CppUnit::TestComposite::run(CppUnit::TestResult*) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==    by 0x4E5C1B9: CppUnit::TestResult::runTest(CppUnit::Test*) (in /usr/lib/libcppunit-1.12.so.1.0.0)
+==25092==  If you believe this happened as a result of a stack
+==25092==  overflow in your program's main thread (unlikely but
+==25092==  possible), you can try to increase the size of the
+==25092==  main thread stack using the --main-stacksize= flag.
+==25092==  The main thread stack size used in this run was 8388608.
+==25092== 
+==25092== HEAP SUMMARY:
+==25092==     in use at exit: 133,574 bytes in 151 blocks
+==25092==   total heap usage: 697 allocs, 546 frees, 233,517 bytes allocated
+==25092== 
+==25092== LEAK SUMMARY:
+==25092==    definitely lost: 0 bytes in 0 blocks
+==25092==    indirectly lost: 0 bytes in 0 blocks
+==25092==      possibly lost: 2,494 bytes in 44 blocks
+==25092==    still reachable: 131,080 bytes in 107 blocks
+==25092==         suppressed: 0 bytes in 0 blocks
+==25092== Rerun with --leak-check=full to see details of leaked memory
+==25092== 
+==25092== For counts of detected and suppressed errors, rerun with: -v
+==25092== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 4 from 4)

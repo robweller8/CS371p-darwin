@@ -124,21 +124,21 @@ int main () {
    Simulate 5 moves.
    Print every grid.
     */
-/*   World darwin1 = World(8,8);
-   Creature c1 = Creature("food1", &food, 0, 0, "east",&darwin1);
-   Creature c2 = Creature("hopper1", &hopper, 3, 3, "north",&darwin1);
-   Creature c3 = Creature("hopper2", &hopper, 3, 4, "east",&darwin1);
-   Creature c4 = Creature("hopper3", &hopper, 4, 4, "south",&darwin1);
-   Creature c5 = Creature("hopper4", &hopper, 4, 3, "west",&darwin1);
-   Creature c6 = Creature("food2", &food, 7, 7, "north",&darwin1);
+   World darwin1 = World(8,8);
+   Creature c1 = Creature("food1", &food, 0, 0, 2,&darwin1);
+   Creature c2 = Creature("hopper1", &hopper, 3, 3, 1,&darwin1);
+   Creature c3 = Creature("hopper2", &hopper, 3, 4, 2,&darwin1);
+   Creature c4 = Creature("hopper3", &hopper, 4, 4, 3,&darwin1);
+   Creature c5 = Creature("hopper4", &hopper, 4, 3, 0,&darwin1);
+   Creature c6 = Creature("food2", &food, 7, 7, 1,&darwin1);
    darwin1.addCreature(&c1);
    darwin1.addCreature(&c2);
    darwin1.addCreature(&c3);
    darwin1.addCreature(&c4);
    darwin1.addCreature(&c5);
    darwin1.addCreature(&c6);
-   darwin1.run(5);
-*/   }
+   darwin1.run(5,1);
+   }
    catch (const invalid_argument&) {
        assert(false);}
    catch (const out_of_range&) {
@@ -160,15 +160,15 @@ Simulate 5 moves.
 Print every grid.
 */
    World darwin2 = World(7,9);
-   Creature c7 = Creature("trap1", &trap, 0, 0, "south",&darwin2);
-   Creature c8 = Creature("hopper5", &hopper, 3, 2, "east",&darwin2);
-   Creature c9 = Creature("rover1", &rover, 5, 4, "north",&darwin2);
-   Creature c10 = Creature("trap2", &trap, 6, 8, "west",&darwin2);
+   Creature c7 = Creature("trap1", &trap, 0, 0, 3,&darwin2);
+   Creature c8 = Creature("hopper5", &hopper, 3, 2, 2,&darwin2);
+   Creature c9 = Creature("rover1", &rover, 5, 4, 1,&darwin2);
+   Creature c10 = Creature("trap2", &trap, 6, 8, 0,&darwin2);
    darwin2.addCreature(&c7);
    darwin2.addCreature(&c8);
    darwin2.addCreature(&c9);
    darwin2.addCreature(&c10);
-   darwin2.run(5);
+   darwin2.run(5,1);
         }
     catch (const invalid_argument&) {
         assert(false);}
@@ -198,48 +198,88 @@ Simulate 1000 moves.
 Print every 100th grid.
 */
 
-   /*
-   World darwin3 = World(7,9);
-   Creature c11 = Creature("food3", &food, 0, 0, "east",&darwin3);
-   Creature c12 = Creature("food4", &food, 0, 0, "east",&darwin3);
-   Creature c13 = Creature("food5", &food, 0, 0, "east",&darwin3);
-   Creature c14 = Creature("food6", &food, 0, 0, "east",&darwin3);
-   Creature c15 = Creature("food7", &food, 0, 0, "east",&darwin3);
-   Creature c16 = Creature("food8", &food, 0, 0, "east",&darwin3);
-   Creature c17 = Creature("food9", &food, 0, 0, "east",&darwin3);
-   Creature c18 = Creature("food10", &food, 0, 0, "east",&darwin3);
-   Creature c19 = Creature("food11", &food, 0, 0, "east",&darwin3);
-   Creature c20 = Creature("food12", &food, 0, 0, "east",&darwin3);
-   Creature c21 = Creature("hopper6", &hopper, 3, 3, "north",&darwin3);
-   Creature c22 = Creature("hopper7", &hopper, 3, 3, "north",&darwin3);
-   Creature c23 = Creature("hopper8", &hopper, 3, 3, "north",&darwin3);
-   Creature c24 = Creature("hopper9", &hopper, 3, 3, "north",&darwin3);
-   Creature c25 = Creature("hopper10", &hopper, 3, 3, "north",&darwin3);
-   Creature c26 = Creature("hopper11", &hopper, 3, 3, "north",&darwin3);
-   Creature c27 = Creature("hopper12", &hopper, 3, 3, "north",&darwin3);
-   Creature c28 = Creature("hopper13", &hopper, 3, 3, "north",&darwin3);
-   Creature c29 = Creature("hopper14", &hopper, 3, 3, "north",&darwin3);
-   Creature c30 = Creature("hopper15", &hopper, 3, 3, "north",&darwin3);
-   Creature c31 = Creature("rover2", &rover, 5, 4, "north",&darwin3);
-   Creature c32 = Creature("rover3", &rover, 5, 4, "north",&darwin3);
-   Creature c33 = Creature("rover4", &rover, 5, 4, "north",&darwin3);
-   Creature c34 = Creature("rover5", &rover, 5, 4, "north",&darwin3);
-   Creature c35 = Creature("rover6", &rover, 5, 4, "north",&darwin3);
-   Creature c36 = Creature("rover7", &rover, 5, 4, "north",&darwin3);
-   Creature c37 = Creature("rover8", &rover, 5, 4, "north",&darwin3);
-   Creature c38 = Creature("rover9", &rover, 5, 4, "north",&darwin3);
-   Creature c39 = Creature("rover10", &rover, 5, 4, "north",&darwin3);
-   Creature c40 = Creature("rover11", &rover, 5, 4, "north",&darwin3);
-   Creature c41 = Creature("trap3", &trap, 6, 8, "west",&darwin3);
-   Creature c42 = Creature("trap4", &trap, 6, 8, "west",&darwin3);
-   Creature c43 = Creature("trap5", &trap, 6, 8, "west",&darwin3);
-   Creature c44 = Creature("trap6", &trap, 6, 8, "west",&darwin3);
-   Creature c45 = Creature("trap7", &trap, 6, 8, "west",&darwin3);
-   Creature c46 = Creature("trap8", &trap, 6, 8, "west",&darwin3);
-   Creature c47 = Creature("trap9", &trap, 6, 8, "west",&darwin3);
-   Creature c48 = Creature("trap10", &trap, 6, 8, "west",&darwin3);
-   Creature c49 = Creature("trap11", &trap, 6, 8, "west",&darwin3);
-   Creature c50 = Creature("trap12", &trap, 6, 8, "west",&darwin3);
+   
+   World darwin3 = World(72,72);
+   int random = rand() % 5184;
+   Creature c11 = Creature("food3", &food, random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c12 = Creature("food4", &food,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c13 = Creature("food5", &food,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c14 = Creature("food6", &food,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c15 = Creature("food7", &food,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c16 = Creature("food8", &food,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c17 = Creature("food9", &food,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c18 = Creature("food10", &food,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c19 = Creature("food11", &food,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c20 = Creature("food12", &food,  random/72, random%72, rand(),&darwin3);
+   random = rand() % 5184;
+   Creature c21 = Creature("hopper6", &hopper,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c22 = Creature("hopper7", &hopper,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c23 = Creature("hopper8", &hopper,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c24 = Creature("hopper9", &hopper,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c25 = Creature("hopper10", &hopper,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c26 = Creature("hopper11", &hopper,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c27 = Creature("hopper12", &hopper,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c28 = Creature("hopper13", &hopper,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c29 = Creature("hopper14", &hopper,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c30 = Creature("hopper15", &hopper,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c31 = Creature("rover2", &rover,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c32 = Creature("rover3", &rover,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c33 = Creature("rover4", &rover,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c34 = Creature("rover5", &rover, random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c35 = Creature("rover6", &rover,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c36 = Creature("rover7", &rover,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c37 = Creature("rover8", &rover,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c38 = Creature("rover9", &rover,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c39 = Creature("rover10", &rover,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c40 = Creature("rover11", &rover,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c41 = Creature("trap3", &trap,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c42 = Creature("trap4", &trap,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c43 = Creature("trap5", &trap,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c44 = Creature("trap6", &trap,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c45 = Creature("trap7", &trap,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c46 = Creature("trap8", &trap,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c47 = Creature("trap9", &trap,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c48 = Creature("trap10", &trap,  random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c49 = Creature("trap11", &trap, random/72, random%72, rand() % 4,&darwin3);
+   random = rand() % 5184;
+   Creature c50 = Creature("trap12", &trap,  random/72, random%72, rand() % 4,&darwin3);
    darwin3.addCreature(&c11);
    darwin3.addCreature(&c12);
    darwin3.addCreature(&c13);
@@ -280,8 +320,8 @@ Print every 100th grid.
    darwin3.addCreature(&c48);
    darwin3.addCreature(&c49);
    darwin3.addCreature(&c50);
-   darwin3.run(1000);
-   */     }
+   darwin3.run(1000, 100);
+       }
     catch (const invalid_argument&) {
         assert(false);}
     catch (const out_of_range&) {
