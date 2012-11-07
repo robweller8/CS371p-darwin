@@ -2,6 +2,8 @@
 #include <vector> // vector
 #include <string>
 #include <iostream>
+#include <cstdlib> // rand, srand
+#include <cassert> // assert
 using namespace std;
 class World;
 class Creature;
@@ -60,7 +62,7 @@ class Species{
             speciesType = 'b';
       }
 // ----
-// addInstruction
+// Species::addInstruction
 // ----
 
 /**
@@ -124,7 +126,7 @@ class  World{
          }
       }
 // ----
-// addCreature
+//  World::addCreature
 // ----
 
 /**
@@ -132,10 +134,13 @@ class  World{
 * @param creature is a pointer to the creature we are adding.
 */
       void addCreature(Creature* newCreature){
+      assert((newCreature->row) < rows);
+      assert((newCreature->column) < columns);
+
       _w[newCreature->row][newCreature->column] = newCreature;
       }
 // ----
-// isEmpty
+//  World::isEmpty
 // ----
 
 /**
@@ -152,7 +157,7 @@ class  World{
 	return true;
       }
 // ----
-// isWall
+//  World::isWall
 // ----
 
 /**
@@ -168,7 +173,7 @@ class  World{
           return false;
       }
 // ----
-// isEnemy
+//  World::isEnemy
 // ----
 
 /**
@@ -203,7 +208,7 @@ class  World{
       _w[row][column]->programCounter = 0;
       }
 // ----
-// printWorld
+//  World::printWorld
 // ----
 
 /**
@@ -228,7 +233,7 @@ class  World{
          cout << "------------------" << endl;
       }
 // ----
-// updateLocation
+// World::updateLocation
 // ----
 
 /**
@@ -246,7 +251,7 @@ class  World{
       void run(int turns, int printEvery);
 };
 // ----
-// execute
+// Creature::execute
 // ----
 
 /**
@@ -425,7 +430,7 @@ void Creature::execute(){
 
 }
 // ----
-// run
+// World::run
 // ----
 
 /**
